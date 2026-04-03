@@ -1,14 +1,17 @@
 import numpy as np
 import random
 
-IMG_1_arr = np.array([0.3])
-IMG_2_arr = np.array([0.8])
+side = 8
+size = side**2
 
-A_arr = np.array([5])
+IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+print(IMG_1_arr)
+IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+print(IMG_2_arr)
+A_arr = np.random.randint(-5, 5, (size, size))
+print(A_arr)
 
-x = IMG_1_arr
-
-C = IMG_1_arr
+x = C = IMG_1_arr
 
 B = A_arr @ IMG_1_arr
 D = A_arr @ IMG_2_arr
@@ -21,25 +24,32 @@ def compute_f2(x, C, lam, r):
     return (x - C)**2 + lam**2 - r**2
 
 def compute_F(A, x, B, D, lam, r, C):
-    top = compute_f1(A, x, B, D, lam)
-    bottom = compute_f2(x, C, lam, r)[0]
-    return np.array([
-        float(top),
-        float(bottom)
-    ])
+    n = len(x)
+    F = np.zeros(n + 1)
+
+    Ax = A @ x
+    d = B - D
+
+    for i in range(0, n):
+        F[i] = Ax[i] - B[i] + lam*d[i]
+
+    F[n] = (np.sum((x - C)**2)) + lam**2 - r**2
+
+    return F
 
 def compute_J(A, B, D, x, C, lam):
-    d = B - D
-    top_left = A[0]
-    top_right = d
-    bottom_left = 2*(x - C)[0]
-    bottom_right = 2*lam
-    return np.array([
-        [top_left, top_right],
-        [bottom_left, bottom_right]
-    ])
+    n = len(x)
+    J = np.zeros((n + 1, n + 1))
+
+    J[:n, :n] = A # Fills in from the top left corner until the second to last row and column
+    J[:n, n] = B - D # Fills in the last column from the top row to the second last row
+    J[n, :n] = 2 * (x - C) # Fills in the last row from the first column to the second last column
+    J[n, n] = 2 * lam # Fills in the last element in the bottom right corner
+
+    return J
 
 def run_iterations(num: int, img1, img2, A, lam, r, inc):
+    n = len(img1)
     x = img1
     C = x
 
@@ -55,15 +65,18 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc):
         F = np.array(compute_F(A, x, B, D, lam, r, C))
         J = compute_J(A, B, D, x, C, lam)
 
-        solution = np.linalg.solve(J, -F)
+        try:
+            solution = np.linalg.solve(J, -F)
+        except np.linalg.LinAlgError:
+            continue
 
-        if abs(solution[1]) > 1e-10:
-            x = x + solution[0]
-            lam = lam + solution[1]
+        if abs(solution[n]) > 1e-10:
+            x = x + solution[:n]
+            lam = lam + solution[n]
             r += inc
             #print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
         else:
-            #print(f"Solution converged at iteration {i}")
+            #print(f"Converged at iteration {i}")
             break
     return x, lam, r, inc, r_initial, inc_initial
 
@@ -77,7 +90,8 @@ def find_best(iterations, img1, img2, A):
 
         x_final, lam_final, r_final, inc_final, r_init, inc_init = run_iterations(iterations, img1, img2, A, lam, r, inc)
 
-        if abs(lam_final - 1) >= 0.0005:
+        if abs(lam_final - 1) >= 0.09:
+            #print(f"Result: lam = {lam_final}")
             continue
         else:
             print(f"Result: Initial r = {r_init}, initial inc = {inc_init} \n"
@@ -85,10 +99,10 @@ def find_best(iterations, img1, img2, A):
             break
 
 find_best(30, IMG_1_arr, IMG_2_arr, A_arr)
-#
+
 # r_str = ''.join(random.choice('01') for _ in range(16))
 # inc_str = ''.join(random.choice('01') for _ in range(16))
 # r = int(r_str, 2) / 100000
 # inc = int(inc_str, 2) / 1000000
-#
+
 # run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, r, inc)
