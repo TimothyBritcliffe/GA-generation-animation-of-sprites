@@ -1,3 +1,5 @@
+import os
+os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
 import numpy as np
 import random
 
@@ -8,14 +10,14 @@ def compute_f1(A, x, B, D, lam):
 def compute_f2(x, C, lam, r):
     return (x - C)**2 + lam**2 - r**2
 
+#Pretty sure either way is valid/works, vectorization just has a possibility of faster run times
+#Not sure though, will look into this later, seems like either work though
 def compute_F(A, x, B, D, lam, r, C):
-    n = len(x)
-    F = np.zeros(n + 1)
-
     Ax = A @ x
     d = B - D
-
-    F_top = Ax - B + lam * d
+    #https://www.programiz.com/python-programming/numpy/vectorization
+    #In this case F_top and F_bottom are both created as arrays based on this vectorization
+    F_top = Ax - B + lam * d #Creates F_top as an array using all elements in Ax
 
     F_bottom = np.sum((x - C)**2) + lam**2 - r**2
 
@@ -33,8 +35,8 @@ def compute_F(A, x, B, D, lam, r, C):
     #
     # return F
 
-
     return np.append(F_top, F_bottom)
+
 
 def compute_J(A, B, D, x, C, lam):
     n = len(x)
@@ -98,7 +100,7 @@ def find_best(iterations, img1, img2, A):
             break
 
 if __name__ == '__main__':
-    side = 8
+    side = 4
     size = side ** 2
 
     IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
