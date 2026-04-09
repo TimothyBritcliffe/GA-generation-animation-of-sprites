@@ -1,7 +1,6 @@
 from typing import List, Tuple
 import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
-from image_translation import process_image, generate_animation_gif
 
 
 
