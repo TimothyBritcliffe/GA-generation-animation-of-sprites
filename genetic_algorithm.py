@@ -7,7 +7,8 @@ from math_calculations import run_iterations
 #Initializes by default 10 individuals (32 bit strings) - First 16 bits are the radius, second half are the increment
 def initialize_population(size:int = 10) -> List[List[int]]:
     individuals_=[]
-    for _ in range(0, size, 1):
+
+    for _ in range(size):
         individuals_.append([random.randint(0, 1) for _ in range(32)])
 
     return individuals_
@@ -43,13 +44,15 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
 
 
 #Checks the population and returns the winning individual that gets to be a parent
-#Winning parent selected by elitism (highest score)
+#Winning parent selected by Tournament - if elitism preferred we can just remove the sample so it finds the best overall
 def selection(pop_with_scores:List[Tuple[List[int], float]]) -> List[int]:
-    best_ind: List[int] = pop_with_scores[0][0]
-    highest_score: float = pop_with_scores[0][1]
-    for p in pop_with_scores:
-        selected_ind: List[int] = p[0]
-        current_score: float = p[1]
+    sample = random.sample(pop_with_scores, 3)
+    best_ind: List[int] = sample[0][0]
+    highest_score: float = sample[0][1]
+
+    for ind in sample:
+        selected_ind: List[int] = ind[0]
+        current_score: float = ind[1]
         if current_score > highest_score:
             highest_score = current_score
             best_ind = selected_ind
