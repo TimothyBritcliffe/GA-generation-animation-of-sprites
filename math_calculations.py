@@ -1,21 +1,6 @@
 import numpy as np
 import random
 
-side = 8
-size = side**2
-
-IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
-print(IMG_1_arr)
-IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
-print(IMG_2_arr)
-A_arr = np.random.randint(-5, 5, (size, size))
-print(A_arr)
-
-x = C = IMG_1_arr
-
-B = A_arr @ IMG_1_arr
-D = A_arr @ IMG_2_arr
-
 def compute_f1(A, x, B, D, lam):
     Ax = A @ x
     return lam*(Ax - D) + (1-lam)*(Ax - B)
@@ -59,7 +44,7 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc):
     r_initial = r
     inc_initial = inc
 
-    #print(f"Initial r = {r_initial}, initial inc = {inc_initial}")
+    print(f"Initial r = {r_initial}, initial inc = {inc_initial}")
 
     for i in range(num):
         F = np.array(compute_F(A, x, B, D, lam, r, C))
@@ -74,9 +59,9 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc):
             x = x + solution[:n]
             lam = lam + solution[n]
             r += inc
-            #print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
+            print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
         else:
-            #print(f"Converged at iteration {i}")
+            print(f"Converged at iteration {i}")
             break
     return x, lam, r, inc, r_initial, inc_initial
 
@@ -98,11 +83,26 @@ def find_best(iterations, img1, img2, A):
                   f"x = {x_final}, lam = {lam_final}")
             break
 
-find_best(30, IMG_1_arr, IMG_2_arr, A_arr)
+if __name__ == '__main__':
+    side = 8
+    size = side ** 2
 
-# r_str = ''.join(random.choice('01') for _ in range(16))
-# inc_str = ''.join(random.choice('01') for _ in range(16))
-# r = int(r_str, 2) / 100000
-# inc = int(inc_str, 2) / 1000000
+    IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+    print(IMG_1_arr)
+    IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+    print(IMG_2_arr)
+    A_arr = np.random.randint(-5, 5, (size, size))
+    print(A_arr)
 
-# run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, r, inc)
+    x = C = IMG_1_arr
+
+    B = A_arr @ IMG_1_arr
+    D = A_arr @ IMG_2_arr
+    find_best(30, IMG_1_arr, IMG_2_arr, A_arr)
+
+    # r_str = ''.join(random.choice('01') for _ in range(16))
+    # inc_str = ''.join(random.choice('01') for _ in range(16))
+    # r = int(r_str, 2) / 100000
+    # inc = int(inc_str, 2) / 1000000
+
+    # run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, r, inc)
