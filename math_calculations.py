@@ -15,12 +15,11 @@ def compute_F(A, x, B, D, lam, r, C):
     Ax = A @ x
     d = B - D
 
-    for i in range(0, n):
-        F[i] = Ax[i] - B[i] + lam*d[i]
+    F_top = Ax - B + lam * d
 
-    F[n] = (np.sum((x - C)**2)) + lam**2 - r**2
+    F_bottom = np.sum((x - C)**2) + lam**2 - r**2
 
-    return F
+    return np.append(F_top, F_bottom)
 
 def compute_J(A, B, D, x, C, lam):
     n = len(x)
