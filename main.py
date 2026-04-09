@@ -9,8 +9,8 @@ if __name__ == '__main__':
     size = side ** 2
 
     #The IMG_1/2_arr variables need to be assigned a 1d array of floating points between 1 and 0 (or in this case 0.9 and 0.1)
-    #IMG_1_arr = process_image("img1.png", size=size) (not implemented)
-    #IMG_2_arr = process_image("img2.png", size=size) (not implemented)
+    #IMG_1_arr = process_image("img1.png", side=side) (not implemented)
+    #IMG_2_arr = process_image("img2.png", side=side) (not implemented)
     IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
     IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
     A_arr = np.random.randint(-5, 5, (size, size))
