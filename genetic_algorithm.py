@@ -1,7 +1,7 @@
 import random
 from typing import List, Tuple
 import os
-os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
+#os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
 import numpy as np
 from math_calculations import run_iterations
 
@@ -39,13 +39,19 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
     radius, increment = decode(individual)
     x, lam, r, inc, r_initial, inc_initial = run_iterations(30, img1, img2, A, 0.001, radius, increment)
 
-    if lam > 1.05:
-        score: float = 0.0
-    else:
-        #score: float = 1.0 - abs(1-lam)
-        score: float = lam
+    # Changed scoring system - it currently makes it so that there's a bunch
+    # of 0's and only looking for a needle in a haystack
 
-    return score
+    # if abs(1 - lam) >= 0.05:
+    #     score: float = 0.0
+    # else:
+    #     #score: float = 1.0 - abs(1-lam)
+    #     score: float = lam
+    # 
+    # return score
+
+    # Improved scoring system
+    return 1 / (1 + abs(1 - lam)) # Makes it so that the score of an individual is relative to 1.0
 
 
 #Sorts the overall population by score (in descending order) takes the best 10 from that list and gets a random set of individuals
@@ -87,7 +93,7 @@ def mutate(ind:List[int], rate:float) -> List[int]:
     modified_ind: List[int] = []
     rate *= 100
 
-    for i in ind:
+    for i in range(len(ind)):
         if random.randint(1, 100) in range(1, int(rate)+1):
             if i == 0:
                 modified_ind.append(1)

@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple
 import os
-os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
+#os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
 import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 
@@ -9,7 +9,7 @@ from genetic_algorithm import initialize_population, calculate_fitness, selectio
 
 if __name__ == '__main__':
     start_time = time.time()
-    side = 8
+    side = 4
     size = side ** 2
 
     #The IMG_1/2_arr variables need to be assigned a 1d array of floating points between 1 and 0 (or in this case 0.9 and 0.1)
@@ -44,6 +44,9 @@ if __name__ == '__main__':
 
                 new_population.append(child1)
                 new_population.append(child2)
+
+                if len(new_population) >= 20:
+                    break
 
         new_population.extend(random_list)
         population = new_population
