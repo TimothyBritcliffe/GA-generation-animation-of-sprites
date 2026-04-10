@@ -1,5 +1,3 @@
-import os
-#os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
 import numpy as np
 import random
 
@@ -97,8 +95,12 @@ def find_best(iterations, img1, img2, A):
         else:
             print(f"Result: Initial r = {r_init}, initial inc = {inc_init} \n"
                   f"x = {x_final}, lam = {lam_final}")
-            break
 
+            break
+    print("========")
+    print(x_final)
+    print("========")
+    print(IMG_2_arr)
 if __name__ == '__main__':
     side = 4
     size = side ** 2

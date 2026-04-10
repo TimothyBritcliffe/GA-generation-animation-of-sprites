@@ -1,7 +1,5 @@
 import time
 from typing import List, Tuple
-import os
-#os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin")
 import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 
@@ -51,10 +49,20 @@ if __name__ == '__main__':
         new_population.extend(random_list)
         population = new_population
 
-    best_individuals, _ = selection(scored_pop)
+    #Rescore the population (as the score gets removed when running selection
+    scored_pop = []
+    for individual in population:
+        score = calculate_fitness(individual, IMG_1_arr, IMG_2_arr, A_arr)
+        scored_pop.append((individual, score))
+
+    #Select the TRUE best
+    best_individuals, best_random = selection(scored_pop)
     final_winner = best_individuals[0]
     final_r, final_inc = decode(final_winner)
+
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
-    end_time = time.time()
-    print(f"Time Taken: {(end_time - start_time)/60.0} minutes")
-    #generate_animation_gif() (not implemented)
+    print(f"Best fitness: {scored_pop[0][1]}")
+    print("=======")
+    print(final_winner)
+    print("=======")
+    print(IMG_1_arr)
