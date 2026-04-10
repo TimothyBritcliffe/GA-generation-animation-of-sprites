@@ -37,8 +37,8 @@ if __name__ == '__main__':
                 child1 = crossover(parent1, parent2)
                 child2 = crossover(parent1, parent2)
 
-                mutate(child1, 0.01) #0.01 = 1% mutation rate
-                mutate(child2, 0.01)
+                child1 = mutate(child1, 0.01) #0.01 = 1% mutation rate
+                child2 = mutate(child2, 0.01)
 
                 new_population.append(child1)
                 new_population.append(child2)
