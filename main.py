@@ -60,6 +60,7 @@ if __name__ == '__main__':
     final_winner = best_individuals[0]
     final_r, final_inc = decode(final_winner)
 
+
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
     print(f"Best fitness: {scored_pop[0][1]}")
     print("=======")

@@ -89,15 +89,12 @@ def crossover(p1:List[int], p2:List[int]) -> List[int]:
 #assumes that rate is given in decimal form, i.e 0.01 = 1%
 def mutate(ind:List[int], rate:float) -> List[int]:
     modified_ind: List[int] = []
-    rate *= 100
 
-    for i in range(len(ind)):
-        if random.randint(1, 100) in range(1, int(rate)+1):
-            if i == 0:
-                modified_ind.append(1)
-            else:
-                modified_ind.append(0)
+    for bit in ind:
+        if random.random() < rate:
+            modified_ind.append(1-bit)
         else:
-            modified_ind.append(i)
+            modified_ind.append(bit)
 
     return modified_ind
+
