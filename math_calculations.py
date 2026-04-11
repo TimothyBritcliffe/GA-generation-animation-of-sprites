@@ -47,7 +47,7 @@ def compute_J(A, B, D, x, C, lam):
 
     return J
 
-def run_iterations(num: int, img1, img2, A, lam, r, inc):
+def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True):
     n = len(img1)
     x = img1
     C = x
@@ -58,7 +58,8 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc):
     r_initial = r
     inc_initial = inc
 
-    print(f"Initial r = {r_initial}, initial inc = {inc_initial}")
+    if comments:
+        print(f"Initial r = {r_initial}, initial inc = {inc_initial}")
 
     for i in range(num):
         F = np.array(compute_F(A, x, B, D, lam, r, C))
@@ -73,9 +74,11 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc):
             x = x + solution[:n]
             lam = lam + solution[n]
             r += inc
-            print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
+            if comments:
+                print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
         else:
-            print(f"Converged at iteration {i}")
+            if comments:
+                print(f"Converged at iteration {i}")
             break
     return x, lam, r, inc, r_initial, inc_initial
 

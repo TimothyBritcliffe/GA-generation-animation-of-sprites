@@ -2,8 +2,7 @@ import time
 from typing import List, Tuple
 import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
-
-
+from math_calculations import run_iterations
 
 if __name__ == '__main__':
     start_time = time.time()
@@ -43,9 +42,6 @@ if __name__ == '__main__':
                 new_population.append(child1)
                 new_population.append(child2)
 
-                if len(new_population) >= 20:
-                    break
-
         new_population.extend(random_list)
         population = new_population
 
@@ -60,10 +56,12 @@ if __name__ == '__main__':
     final_winner = best_individuals[0]
     final_r, final_inc = decode(final_winner)
 
-
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
     print(f"Best fitness: {scored_pop[0][1]}")
     print("=======")
-    print(final_winner)
+    print(f"Best individual: \n {final_winner}")
     print("=======")
-    print(IMG_1_arr)
+    print(f"Ending Image: \n {IMG_2_arr}")
+    print("=======")
+    x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
+    print(f"Ending image with best individual: \n {x}")
