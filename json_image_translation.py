@@ -71,7 +71,7 @@ def generate_animation_gif(num, img1, img2, A, lam, r, inc, dimensions):
         img = np.array(x)
         img = img.reshape(dimensions, dimensions)
         final_img = (img * 255).astype(np.uint8)
-        cv2.imwrite(f"FINAL_GENERATION/IMG{i+1}.png", final_img)
+        Image.fromarray(final_img).save(f"FINAL_GENERATION/IMG{i+1}.png")
     frames = [Image.open(f"FINAL_GENERATION/IMG{i + 1}.png") for i in range(30)]
     frames[0].save(
         "animation.gif",
