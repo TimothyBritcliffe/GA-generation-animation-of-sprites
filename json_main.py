@@ -7,12 +7,13 @@ from PIL import Image
 from json_image_translation import generate_animation_gif
 from json_genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 from json_math_calculations import run_iterations
-from multiprocessing import Pool
+#from multiprocessing import Pool
+from joblib import Parallel, delayed
 
 
 if __name__ == '__main__':
     start_time = time.time()
-    side = 4
+    side = 8
     size = side ** 2
 
     #The IMG_1/2_arr variables need to be assigned a 1d array of floating points between 1 and 0 (or in this case 0.9 and 0.1)
@@ -39,12 +40,18 @@ if __name__ == '__main__':
 
         filePaths = [f"GENERATION {i}/file{n}.json" for n in range(30)]
 
-        with Pool(8) as p:
-            results = p.imap_unordered(calculate_fitness, filePaths)
-            for score, fileRef in zip(results, filePaths):
-                temp = [score, fileRef]
-                print(fileRef)
-                scored_pop.append(temp)
+        # with Pool(8) as p:
+        #     results = p.imap_unordered(calculate_fitness, filePaths)
+        #     for score, fileRef in zip(results, filePaths):
+        #         temp = [score, fileRef]
+        #         print(fileRef)
+        #         scored_pop.append(temp)
+
+        results = Parallel(n_jobs=10)(delayed(calculate_fitness)(fp) for fp in filePaths)
+        for score, fileRef in zip(results, filePaths):
+            temp = [score, fileRef]
+            print(fileRef)
+            scored_pop.append(temp)
 
         new_population: List[List[int]] = []
         parents, random_list = selection(scored_pop)
@@ -105,12 +112,11 @@ if __name__ == '__main__':
         scored_pop.append((score, fileRef))'''
     filePaths = [f"GENERATION {currentGen}/file{n}.json" for n in range(30)]
 
-    with Pool() as p:
-        results = p.map(calculate_fitness, filePaths)
-        for score, fileRef in zip(results, filePaths):
-            temp = [score, fileRef]
-            print(fileRef)
-            scored_pop.append(temp)
+    results = Parallel(n_jobs=10)(delayed(calculate_fitness)(fp) for fp in filePaths)
+    for score, fileRef in zip(results, filePaths):
+        temp = [score, fileRef]
+        print(fileRef)
+        scored_pop.append(temp)
     #Select the TRUE best
     best_individuals, best_random = selection(scored_pop)
     final_winner = best_individuals[0]
