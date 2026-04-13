@@ -87,7 +87,7 @@ def crossover(p1:List[int], p2:List[int]) -> List[int]:
 
 #Iterates through the individual checking for a probability hit, in the event of a hit, it switches the bits values (0 to 1 and 1 to 0)
 #assumes that rate is given in decimal form, i.e 0.01 = 1%
-def mutate(ind:List[int], rate:float) -> List[int]:
+def mutate(ind:List[int], rate:float = 0.01) -> List[int]:
     modified_ind: List[int] = []
 
     for bit in ind:
