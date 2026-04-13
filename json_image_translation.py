@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 import json_math_calculations as M
-import cv2
+#import cv2
 import os
 
 #Produces a 1x64 array of values between 0.1 and 0.9
@@ -72,6 +72,7 @@ def generate_animation_gif(num, img1, img2, A, lam, r, inc, dimensions):
         img = img.reshape(dimensions, dimensions)
         final_img = (img * 255).astype(np.uint8)
         Image.fromarray(final_img).save(f"FINAL_GENERATION/IMG{i+1}.png")
+        #cv2.imwrite(f"FINAL_GENERATION/IMG{i+1}.png", final_img)
     frames = [Image.open(f"FINAL_GENERATION/IMG{i + 1}.png") for i in range(30)]
     frames[0].save(
         "animation.gif",
