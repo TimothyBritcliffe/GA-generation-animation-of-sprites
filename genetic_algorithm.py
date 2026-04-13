@@ -62,17 +62,13 @@ def selection(pop_with_scores:List[Tuple[List[int], float]]) -> Tuple[List[List[
     best_10 = set_of_individuals[:10]
     candidates = set_of_individuals[10:]
 
-    random_10 = []
     target_size = min(10, len(candidates))
 
     if target_size == 0:
         print("Warning: Population too small to pick random survivors.")
         return best_10, []
 
-    while len(random_10) < target_size:
-        random_ind = random.choice(candidates)
-        if random_ind not in random_10:
-            random_10.append(random_ind)
+    random_10 = random.sample(candidates, k=target_size)
 
     return best_10, random_10
 

@@ -138,18 +138,7 @@ def selection(pop_with_scores) -> Tuple[List[List[int]], List[List[int]]]:
     if target_size == 0:
         print("Warning: Population too small to pick random survivors.")
         return best_10, []
-    counter = 0
-    while len(random_10) < target_size:
-        counter += 1
-        if counter == 21:
-            breakpoint("going forever")
-        random_ind = random.choice(candidates)
-        print("is this running forever")
-        print(f"length of candidated {len(candidates)},  {len(random_10)} ")
-        print("probably")
-        if random_ind not in random_10:
-            random_10.append(random_ind)
-            candidates.remove(random_ind)
+    random_10 = random.sample(candidates, k=target_size) if target_size > 0 else []
 
     return best_10, random_10
 
