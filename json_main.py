@@ -131,5 +131,5 @@ if __name__ == '__main__':
     print("=======")
     x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
     print(f"Ending image with best individual: \n {x}")
-
+    print(f"Total Time: {time.time() - start_time}")
     generate_animation_gif(30, IMG_1_arr, IMG_2_arr, A_arr, 0.0001, final_r, final_inc, side)
