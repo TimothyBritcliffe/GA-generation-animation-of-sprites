@@ -4,10 +4,12 @@ import time
 from typing import List, Tuple
 import numpy as np
 from PIL import Image
-import json_image_translation
+from json_image_translation import generate_animation_gif
 from json_genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 from json_math_calculations import run_iterations
 from multiprocessing import Pool
+
+
 if __name__ == '__main__':
     start_time = time.time()
     side = 4
@@ -130,4 +132,4 @@ if __name__ == '__main__':
     x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
     print(f"Ending image with best individual: \n {x}")
 
-    image_translation.generate_animation_gif(30, IMG_1_arr, IMG_2_arr, A_arr, 0.0001, final_r, final_inc, side)
+    generate_animation_gif(30, IMG_1_arr, IMG_2_arr, A_arr, 0.0001, final_r, final_inc, side)
