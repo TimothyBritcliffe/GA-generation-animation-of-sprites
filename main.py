@@ -4,7 +4,7 @@ import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 from math_calculations import run_iterations
 from joblib import Parallel, delayed
-from image_translation import process_image, build_full_frames_from_histories, generate_animation_gif, vector_to_image
+from image_translation import process_image, build_full_images_from_histories, generate_animation_gif, vector_to_image
 
 
 if __name__ == '__main__':
@@ -73,17 +73,17 @@ if __name__ == '__main__':
         slice_histories.append(x_history)
 
     #Creates the full vector from the slice history, then turns that into an image (does it for all slice histories, therefore it is a list of "images")
-    full_frames = build_full_frames_from_histories(slice_histories, side)
+    list_of_images = build_full_images_from_histories(slice_histories, side)
 
     #The starting and ending images must be included in the animation so we need to convert these from vectors back to images
-    start_frame = vector_to_image(IMG_1_arr, side)
-    end_frame = vector_to_image(IMG_2_arr, side)
+    start_image = vector_to_image(IMG_1_arr, side)
+    end_image = vector_to_image(IMG_2_arr, side)
 
     #MASH EM
-    frames_with_ends = [start_frame] + full_frames + [end_frame]
+    final_list_of_images = [start_image] + list_of_images + [end_image]
 
     #Creates the gif based on the list of images and a desired path name for le gif
-    generate_animation_gif(frames_with_ends, output_path="translation.gif")
+    generate_animation_gif(final_list_of_images, output_path="translation.gif")
 
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
     print(f"Best fitness: {scored_pop[0][1]}")
