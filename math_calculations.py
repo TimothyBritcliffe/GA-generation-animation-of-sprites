@@ -47,13 +47,15 @@ def compute_J(A, B, D, x, C, lam):
 
     return J
 
-def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True):
+def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True, capture_history: bool = False):
     n = len(img1)
     x = img1
     C = x
 
     B = A @ img1
     D = A @ img2
+
+    x_history = [x.copy()] if capture_history else None
 
     r_initial = r
     inc_initial = inc
