@@ -43,7 +43,7 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
     # temporary hard coded values
     # img side length = 32, 1024 total pixels, 1024/16 = 64,
     # 16 is length of solution vector as A_arr is 16x16
-    for x in range(0, 256, 16):
+    for x in range(0, len(img1), 16):
         temp1 = (np.array(img1[x:x + 16]))
         temp2 = (np.array(img2[x:x + 16]))
         lam, x = run_iterations(30, temp1, temp2, A, 0.001, radius, increment, False)
