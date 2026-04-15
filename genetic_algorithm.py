@@ -35,7 +35,19 @@ def decode(ind:List[int]) -> Tuple[float,float]:
 #Executes the math solver and returns a score ($0.0$ to $1.0$) based on how close lam got to 1.0
 def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:np.ndarray) -> float:
     radius, increment = decode(individual)
-    x, lam, r, inc, r_initial, inc_initial = run_iterations(30, img1, img2, A, 0.001, radius, increment)
+    #x, lam, r, inc, r_initial, inc_initial = run_iterations(30, img1, img2, A, 0.001, radius, increment)
+
+    # print(f"calculating fitness of individual {individual}")
+
+    lam_list = []
+    # temporary hard coded values
+    # img side length = 32, 1024 total pixels, 1024/16 = 64,
+    # 16 is length of solution vector as A_arr is 16x16
+    for x in range(0, 256, 16):
+        temp1 = (np.array(img1[x:x + 16]))
+        temp2 = (np.array(img1[x:x + 16]))
+        lam, x = run_iterations(30, temp1, temp2, A, 0.001, radius, increment, False)
+        lam_list.append(lam)
 
     # Changed scoring system - it currently makes it so that there's a bunch
     # of 0's and only looking for a needle in a haystack

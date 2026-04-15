@@ -80,7 +80,7 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True):
             if comments:
                 print(f"Converged at iteration {i}")
             break
-    return x, lam, r, inc, r_initial, inc_initial
+    return lam, x #, r, inc, r_initial, inc_initial
 
 def find_best(iterations, img1, img2, A):
     while True:
