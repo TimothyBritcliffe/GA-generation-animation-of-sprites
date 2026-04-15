@@ -45,10 +45,14 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
     # 16 is length of solution vector as A_arr is 16x16
     for x in range(0, 256, 16):
         temp1 = (np.array(img1[x:x + 16]))
-        temp2 = (np.array(img1[x:x + 16]))
+        temp2 = (np.array(img2[x:x + 16]))
         lam, x = run_iterations(30, temp1, temp2, A, 0.001, radius, increment, False)
         lam_list.append(lam)
 
+    avg = 0
+    for x in lam_list:
+        avg += x
+    lam = avg / len(lam_list)
     # Changed scoring system - it currently makes it so that there's a bunch
     # of 0's and only looking for a needle in a haystack
 
@@ -61,12 +65,13 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
     # return score
 
     # Improved scoring system
-    return 1 / (1 + abs(1 - lam)) # Makes it so that the score of an individual is relative to 1.0
+    return [individual, 1 / (1 + abs(1 - lam))] # Makes it so that the score of an individual is relative to 1.0
 
 
 #Sorts the overall population by score (in descending order) takes the best 10 from that list and gets a random set of individuals
 #Random individual selection count is determined by the target size (if the # of individuals after selecting the top 10 is under 10, then it just selects the remaining, otherwise by default it is 10)
 def selection(pop_with_scores:List[Tuple[List[int], float]]) -> Tuple[List[List[int]], List[List[int]]]:
+    print("selecting best individuals and chuds")
     pop_with_scores.sort(key=lambda x: x[1], reverse=True)
 
     set_of_individuals = [individual[0] for individual in pop_with_scores]
@@ -74,13 +79,17 @@ def selection(pop_with_scores:List[Tuple[List[int], float]]) -> Tuple[List[List[
     best_10 = set_of_individuals[:10]
     candidates = set_of_individuals[10:]
 
+    random_10 = []
     target_size = min(10, len(candidates))
 
     if target_size == 0:
         print("Warning: Population too small to pick random survivors.")
         return best_10, []
 
-    random_10 = random.sample(candidates, k=target_size)
+    while len(random_10) < target_size:
+        random_ind = random.choice(candidates)
+        if random_ind not in random_10:
+            random_10.append(random_ind)
 
     return best_10, random_10
 

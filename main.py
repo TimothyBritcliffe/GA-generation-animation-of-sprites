@@ -23,7 +23,7 @@ if __name__ == '__main__':
     generations: int = 30
 
     for i in range(0, generations):
-        #scored_pop: List[Tuple[List[int], float]] = []
+        scored_pop: List[Tuple[List[int], float]] = []
 
         print(f"Analyzing Generation: {i}")
         scored_pop = Parallel(n_jobs=-1)(delayed(calculate_fitness)(individual, IMG_1_arr, IMG_2_arr, A_arr) for individual in population)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         population = new_population
 
         # Rescore the population (as the score gets removed when running selection
-
+    scored_pop = []
     scored_pop = Parallel(n_jobs=-1)(delayed(calculate_fitness)(individual, IMG_1_arr, IMG_2_arr, A_arr) for individual in population)
 
     #Select the TRUE best
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     print("=======")
     print(f"Ending Image: \n {IMG_2_arr}")
     print("=======")
-    x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
-    print(f"Ending image with best individual: \n {x}")
+    #x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
+    #print(f"Ending image with best individual: \n {x}")
     print(f"Total Time: {time.time() - start_time}")
