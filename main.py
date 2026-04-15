@@ -4,6 +4,8 @@ import numpy as np
 from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
 from math_calculations import run_iterations
 from joblib import Parallel, delayed
+from image_translation import process_image, build_full_frames_from_histories, generate_animation_gif, vector_to_image
+
 
 if __name__ == '__main__':
     start_time = time.time()
@@ -11,10 +13,10 @@ if __name__ == '__main__':
     size = side ** 2
 
     #The IMG_1/2_arr variables need to be assigned a 1d array of floating points between 1 and 0 (or in this case 0.9 and 0.1)
-    #IMG_1_arr = process_image("img1.png", side=side) (not implemented)
-    #IMG_2_arr = process_image("img2.png", side=side) (not implemented)
-    IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
-    IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+    IMG_1_arr = process_image("GAtest1.png", side=side)
+    IMG_2_arr = process_image("GAtest2.png", side=side)
+    # IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
+    # IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
     #A_arr = np.random.randint(-5, 5, (size, size))
     # OPTIMIZATION TEST
     A_arr = np.random.randint(-5, 5, size=(16, 16))
@@ -56,6 +58,32 @@ if __name__ == '__main__':
     best_individuals, best_random = selection(scored_pop)
     final_winner = best_individuals[0]
     final_r, final_inc = decode(final_winner)
+
+
+    #Handles the new slicing functionality (specifically since the A_arr is now 16x16
+    slice_histories = []
+    chunk_size = A_arr.shape[0]
+
+    for start in range(0, len(IMG_1_arr), chunk_size):
+        slice_1 = IMG_1_arr[start:start + chunk_size]
+        slice_2 = IMG_2_arr[start:start + chunk_size]
+
+        lam, x_final, x_history = run_iterations(30, slice_1, slice_2, A_arr, 0.001, final_r, final_inc, comments=False, capture_history=True)
+
+        slice_histories.append(x_history)
+
+    #Creates the full vector from the slice history, then turns that into an image (does it for all slice histories, therefore it is a list of "images")
+    full_frames = build_full_frames_from_histories(slice_histories, side)
+
+    #The starting and ending images must be included in the animation so we need to convert these from vectors back to images
+    start_frame = vector_to_image(IMG_1_arr, side)
+    end_frame = vector_to_image(IMG_2_arr, side)
+
+    #MASH EM
+    frames_with_ends = [start_frame] + full_frames + [end_frame]
+
+    #Creates the gif based on the list of images and a desired path name for le gif
+    generate_animation_gif(frames_with_ends, output_path="translation.gif")
 
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
     print(f"Best fitness: {scored_pop[0][1]}")
