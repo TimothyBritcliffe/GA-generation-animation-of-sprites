@@ -3,7 +3,7 @@ from typing import List, Tuple
 import numpy as np
 from math_calculations import run_iterations
 
-
+subsection_size = 8 # Sets the size when splitting up the image into smaller chunks
 
 #Initializes by default 10 individuals (32 bit strings) - First 16 bits are the radius, second half are the increment
 def initialize_population(size:int = 30) -> List[List[int]]:
@@ -43,16 +43,19 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
     # temporary hard coded values
     # img side length = 32, 1024 total pixels, 1024/16 = 64,
     # 16 is length of solution vector as A_arr is 16x16
-    for x in range(0, len(img1), 16):
-        temp1 = (np.array(img1[x:x + 16]))
-        temp2 = (np.array(img2[x:x + 16]))
+    for x in range(0, len(img1), subsection_size):
+        temp1 = (np.array(img1[x:x + subsection_size]))
+        temp2 = (np.array(img2[x:x + subsection_size]))
         lam, x = run_iterations(30, temp1, temp2, A, 0.001, radius, increment, False)
         lam_list.append(lam)
 
-    avg = 0
-    for x in lam_list:
-        avg += x
-    lam = avg / len(lam_list)
+    # avg = 0
+    # for x in lam_list:
+    #     avg += x
+    # lam = avg / len(lam_list)
+
+    lam = min(lam_list) # Using min lam instead of avg
+
     # Changed scoring system - it currently makes it so that there's a bunch
     # of 0's and only looking for a needle in a haystack
 

@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple
 import numpy as np
-from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode
+from genetic_algorithm import initialize_population, calculate_fitness, selection, crossover, mutate, decode, subsection_size
 from math_calculations import run_iterations
 from joblib import Parallel, delayed
 from image_translation import process_image, build_full_images_from_histories, generate_animation_gif, vector_to_image
@@ -18,9 +18,10 @@ if __name__ == '__main__':
     # IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
     # IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
     #A_arr = np.random.randint(-5, 5, (size, size))
+
     # OPTIMIZATION TEST
-    A_arr = np.random.randint(-5, 5, size=(16, 16))
-    #
+    A_arr = np.random.randint(-5, 5, size=(subsection_size, subsection_size))
+
     population: List[List[int]] = initialize_population()
     generations: int = 30
 
@@ -70,7 +71,9 @@ if __name__ == '__main__':
 
         lam, x_final, x_history = run_iterations(30, slice_1, slice_2, A_arr, 0.001, final_r, final_inc, comments=False, capture_history=True)
 
-        slice_histories.append(x_history)
+        slices = x_history[10::4] # [10::4] @ duration = 120 produces a pretty good gif
+
+        slice_histories.append(slices)
 
     #Creates the full vector from the slice history, then turns that into an image (does it for all slice histories, therefore it is a list of "images")
     list_of_images = build_full_images_from_histories(slice_histories, side)
@@ -91,6 +94,7 @@ if __name__ == '__main__':
     print(f"Best individual: \n {final_winner}")
     print("=======")
     print(f"Ending Image: \n {IMG_2_arr}")
+    print(f"Total slices: {len(slice_histories)}")
     print("=======")
     #x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
     #print(f"Ending image with best individual: \n {x}")
