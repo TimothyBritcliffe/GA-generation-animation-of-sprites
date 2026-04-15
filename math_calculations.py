@@ -76,12 +76,17 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True, 
             x = x + solution[:n]
             lam = lam + solution[n]
             r += inc
+            if capture_history:
+                x_history.append(x.copy())
             if comments:
                 print(f"After iteration {i + 1}: x = {x}, lam = {lam}")
         else:
             if comments:
                 print(f"Converged at iteration {i}")
             break
+    if capture_history:
+        return lam, x, x_history
+
     return lam, x #, r, inc, r_initial, inc_initial
 
 def find_best(iterations, img1, img2, A):
