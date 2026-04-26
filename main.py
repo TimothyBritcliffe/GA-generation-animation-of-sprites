@@ -15,11 +15,7 @@ if __name__ == '__main__':
     #The IMG_1/2_arr variables need to be assigned a 1d array of floating points between 1 and 0 (or in this case 0.9 and 0.1)
     IMG_1_arr = process_image("GAtest1.png", side=side)
     IMG_2_arr = process_image("GAtest2.png", side=side)
-    # IMG_1_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
-    # IMG_2_arr = np.round(np.random.uniform(0.1, 0.9, size), 1)
-    #A_arr = np.random.randint(-5, 5, (size, size))
 
-    # OPTIMIZATION TEST
     A_arr = np.random.randint(-5, 5, size=(subsection_size, subsection_size))
 
     population: List[List[int]] = initialize_population()
@@ -51,7 +47,7 @@ if __name__ == '__main__':
         new_population.extend(random_list)
         population = new_population
 
-        # Rescore the population (as the score gets removed when running selection
+    #Rescore the population
     scored_pop = []
     scored_pop = Parallel(n_jobs=-1)(delayed(calculate_fitness)(individual, IMG_1_arr, IMG_2_arr, A_arr) for individual in population)
 
@@ -60,8 +56,7 @@ if __name__ == '__main__':
     final_winner = best_individuals[0]
     final_r, final_inc = decode(final_winner)
 
-
-    #Handles the new slicing functionality (specifically since the A_arr is now 16x16
+    #Handles the slicing functionality (specifically since the A_arr is now 16x16
     slice_histories = []
     chunk_size = A_arr.shape[0]
 
@@ -82,10 +77,10 @@ if __name__ == '__main__':
     start_image = vector_to_image(IMG_1_arr, side)
     end_image = vector_to_image(IMG_2_arr, side)
 
-    #MASH EM
+    #Gets a list of images including: original images, and generated images
     final_list_of_images = [start_image] + list_of_images + [end_image]
 
-    #Creates the gif based on the list of images and a desired path name for le gif
+    #Creates the GIF based on the list of images and a desired path name for le gif
     generate_animation_gif(final_list_of_images, output_path="translation.gif")
 
     print(f"Complete. Best Radius: {final_r}, Best Increment: {final_inc}")
@@ -96,6 +91,5 @@ if __name__ == '__main__':
     print(f"Ending Image: \n {IMG_2_arr}")
     print(f"Total slices: {len(slice_histories)}")
     print("=======")
-    #x, lam, r, inc, r_initial, inc_initial = run_iterations(30, IMG_1_arr, IMG_2_arr, A_arr, 0.001, final_r, final_inc, comments=False)
-    #print(f"Ending image with best individual: \n {x}")
+
     print(f"Total Time: {time.time() - start_time}")
