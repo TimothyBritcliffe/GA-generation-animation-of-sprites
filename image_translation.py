@@ -1,11 +1,10 @@
 from typing import List
-
 import numpy as np
 from PIL import Image
 
 
 #Produces a 1xside array of values between 0.1 and 0.9
-#https://pillow.readthedocs.io/en/stable/reference/Image.html - kinda neat, and worthwhile to look through
+#https://pillow.readthedocs.io/en/stable/reference/Image.html
 def process_image(image_path:str, side:int) -> np.ndarray:
     img: Image.Image = Image.open(image_path)
     img: Image.Image = img.convert("L") #to grayscale
@@ -49,7 +48,7 @@ def build_full_images_from_histories(slice_histories, side) -> List[Image.Image]
     return images
 
 
-#Takes many vectors and smooshes them together
+#Takes many vectors and forms a single vector frame out of them (or just a larger vector)
 def reassemble_vector(slice_vectors) -> np.ndarray:
     return np.concatenate(slice_vectors)
 
@@ -64,7 +63,7 @@ def vector_to_image(full_vector, side) -> Image.Image:
 
 
 #Saves ALL images together as one .gif file (thus giving the animation)
-def generate_animation_gif(images:List[Image], output_path:str="animation.gif", duration:int=120):
+def generate_animation_gif(images:List[Image], output_path:str="animation.gif", duration:int=480):
     if images:
         images[0].save(output_path, save_all=True, append_images=images[1:], duration=duration, loop=0)
 
