@@ -1,37 +1,26 @@
 import numpy as np
 import random
 
+
 def compute_f1(A, x, B, D, lam):
     Ax = A @ x
     return lam*(Ax - D) + (1-lam)*(Ax - B)
 
+
 def compute_f2(x, C, lam, r):
     return (x - C)**2 + lam**2 - r**2
+
 
 #Pretty sure either way is valid/works, vectorization just has a possibility of faster run times
 #Not sure though, will look into this later, seems like either work though
 def compute_F(A, x, B, D, lam, r, C):
     Ax = A @ x
     d = B - D
-    #https://www.programiz.com/python-programming/numpy/vectorization
+
     #In this case F_top and F_bottom are both created as arrays based on this vectorization
     F_top = Ax - B + lam * d #Creates F_top as an array using all elements in Ax
 
     F_bottom = np.sum((x - C)**2) + lam**2 - r**2
-
-    # Old way
-    # n = len(x)
-    # F = np.zeros(n + 1)
-    #
-    # Ax = A @ x
-    # d = B - D
-    #
-    # for i in range(0, n):
-    #     F[i] = Ax[i] - B[i] + lam * d[i]
-    #
-    # F[n] = (np.sum((x - C) ** 2)) + lam ** 2 - r ** 2
-    #
-    # return F
 
     return np.append(F_top, F_bottom)
 
@@ -46,6 +35,7 @@ def compute_J(A, B, D, x, C, lam):
     J[n, n] = 2 * lam # Fills in the last element in the bottom right corner
 
     return J
+
 
 def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True, capture_history: bool = False):
     n = len(img1)
@@ -87,7 +77,8 @@ def run_iterations(num: int, img1, img2, A, lam, r, inc, comments: bool = True, 
     if capture_history:
         return lam, x, x_history
 
-    return lam, x #, r, inc, r_initial, inc_initial
+    return lam, x #, r, inc, r_initial, inc_initial (needed if running find_best)
+
 
 def find_best(iterations, img1, img2, A):
     while True:
@@ -111,6 +102,7 @@ def find_best(iterations, img1, img2, A):
     print(x_final)
     print("========")
     print(IMG_2_arr)
+
 if __name__ == '__main__':
     side = 4
     size = side ** 2
@@ -123,7 +115,6 @@ if __name__ == '__main__':
     print(A_arr)
 
     x = C = IMG_1_arr
-
     B = A_arr @ IMG_1_arr
     D = A_arr @ IMG_2_arr
     find_best(30, IMG_1_arr, IMG_2_arr, A_arr)
