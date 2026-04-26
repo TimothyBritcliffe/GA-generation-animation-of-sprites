@@ -1,5 +1,5 @@
 import random
-from typing import List, Tuple
+from typing import List, Tuple, Any
 import numpy as np
 from math_calculations import run_iterations
 
@@ -33,11 +33,10 @@ def decode(ind:List[int]) -> Tuple[float,float]:
 
 
 #Executes the math solver and returns a score ($0.0$ to $1.0$) based on how close lam got to 1.0
-def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:np.ndarray) -> float:
+def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:np.ndarray) -> list[
+    list[int] | float | Any]:
     radius, increment = decode(individual)
-    #x, lam, r, inc, r_initial, inc_initial = run_iterations(30, img1, img2, A, 0.001, radius, increment)
 
-    # print(f"calculating fitness of individual {individual}")
 
     lam_list = []
     # temporary hard coded values
@@ -49,25 +48,8 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
         lam, x = run_iterations(30, temp1, temp2, A, 0.001, radius, increment, False)
         lam_list.append(lam)
 
-    # avg = 0
-    # for x in lam_list:
-    #     avg += x
-    # lam = avg / len(lam_list)
+    lam = min(lam_list)
 
-    lam = min(lam_list) # Using min lam instead of avg
-
-    # Changed scoring system - it currently makes it so that there's a bunch
-    # of 0's and only looking for a needle in a haystack
-
-    # if abs(1 - lam) >= 0.05:
-    #     score: float = 0.0
-    # else:
-    #     #score: float = 1.0 - abs(1-lam)
-    #     score: float = lam
-    # 
-    # return score
-
-    # Improved scoring system
     return [individual, 1 / (1 + abs(1 - lam))] # Makes it so that the score of an individual is relative to 1.0
 
 
