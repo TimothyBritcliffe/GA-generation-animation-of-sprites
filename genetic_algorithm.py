@@ -39,9 +39,8 @@ def calculate_fitness(individual:List[int], img1:np.ndarray, img2:np.ndarray, A:
 
 
     lam_list = []
-    # temporary hard coded values
-    # img side length = 32, 1024 total pixels, 1024/16 = 64,
-    # 16 is length of solution vector as A_arr is 16x16
+    # Currently hardcoded values, img side length = 32, 1024 pixels, 1024/16=64
+    # 16 is the length of solution vector as A_arr is of size 16x16
     for x in range(0, len(img1), subsection_size):
         temp1 = (np.array(img1[x:x + subsection_size]))
         temp2 = (np.array(img2[x:x + subsection_size]))
@@ -65,8 +64,11 @@ def selection(pop_with_scores:List[Tuple[List[int], float]]) -> Tuple[List[List[
     candidates = set_of_individuals[10:]
 
     random_10 = []
+
+    #Establishes the size of the list (number of random individuals returned), attempts to force it to be defaulted to 10, while also including dynamic sizing
     target_size = min(10, len(candidates))
 
+    # This condition returns a random_10 as an empty list, will break the rest of the app if true as the population ends up being restrictive
     if target_size == 0:
         print("Warning: Population too small to pick random survivors.")
         return best_10, []
